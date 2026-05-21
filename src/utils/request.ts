@@ -115,7 +115,7 @@ instance.interceptors.response.use(
     const requestKey = generateReqKey(config)
     pendingRequestsMap.delete(requestKey)
     // 统一处理响应数据
-    const { code, message: msg, data } = response.data
+    const { code, msg, data } = response.data
     if (code === 200) {
       // 成功，剥离外层包装，直接返回业务数据data
       console.log('拦截resolve', data)
@@ -128,6 +128,7 @@ instance.interceptors.response.use(
       window.location.href = '/login'
       return Promise.reject(new Error('登录状态已过期，请重新登录'))
     } else {
+      ElMessage.error(msg || '请求失败')
       console.log('拦截reject', msg)
       return Promise.reject(response.data)
     }

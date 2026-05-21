@@ -10,11 +10,7 @@
           <el-input v-model="ruleForm.password" type="password" />
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            @click="submitForm(formRef)"
-            >登录</el-button
-          >
+          <el-button type="primary" @click="submitForm(formRef)">登录</el-button>
           <el-button @click="resetForm(formRef)">取消</el-button>
         </el-form-item>
       </el-form>
@@ -27,6 +23,7 @@ import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElLoading } from 'element-plus'
+import { login } from '@/api/login'
 
 // 定义路由实例
 const router = useRouter()
@@ -34,8 +31,8 @@ const router = useRouter()
 const formRef = ref<FormInstance>()
 // 定义一个reactive对象来存储表单数据
 const ruleForm = reactive({
-  userId: 'ADMIN',
-  password: '123456',
+  userId: '', // 账号，admin
+  password: '', // 密码，123456
 })
 // 验证账号
 const validateLoginId = (rule: any, value: any, callback: any) => {
@@ -67,12 +64,18 @@ const submitForm = (formEl: FormInstance | undefined) => {
       const loading = ElLoading.service({
         lock: true,
         text: '登录中...',
-        background: 'rgba(0, 0, 0, 0.7)'
+        background: 'rgba(0, 0, 0, 0.7)',
       })
-      setTimeout(() => {
-        loading.close()
-        router.push('/index')
-      }, 2000)
+      login({ userId: ruleForm.userId, password: ruleForm.password })
+        .then((res) => {
+          loading.close()
+          console.log('res:', res)
+          router.push('/index')
+        })
+        .catch((err) => {
+          loading.close()
+          console.log('err:', err)
+        })
     } else {
       console.log('登录失败!')
     }
