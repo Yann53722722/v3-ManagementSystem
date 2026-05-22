@@ -5,7 +5,7 @@ export default [
     url: '/api/login',
     method: 'post',
     timeout: 1000, // 模拟网络延迟
-    response: ({ body }) => {
+    response: ({ body }: { body: { userId: string; password: string } }) => {
       const { userId, password } = body
       if (userId === 'admin' && password === '123456') {
         return {
@@ -22,4 +22,4 @@ export default [
       }
     },
   },
-] as MockMethods[]
+] as MockMethod[]
