@@ -24,6 +24,7 @@ import { useRouter } from 'vue-router'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElLoading } from 'element-plus'
 import { login } from '@/api/login'
+import { setToken } from '@/utils/auth'
 
 // 定义路由实例
 const router = useRouter()
@@ -69,12 +70,11 @@ const submitForm = (formEl: FormInstance | undefined) => {
       login({ userId: ruleForm.userId, password: ruleForm.password })
         .then((res) => {
           loading.close()
-          console.log('res:', res)
+          setToken(res.token, 86400)
           router.push('/index')
         })
         .catch((err) => {
           loading.close()
-          console.log('err:', err)
         })
     } else {
       console.log('登录失败!')

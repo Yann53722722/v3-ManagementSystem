@@ -7,7 +7,7 @@ export interface LoginData {
   password: string
 }
 // 登录接口
-export const login = (data: LoginData) => {
+export const login = (data: LoginData): Promise<any> => {
   data.password = encrypt(data.password) // 加密密码
   return request.post('/api/login', data)
 }
