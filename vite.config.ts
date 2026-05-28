@@ -14,9 +14,11 @@ export default defineConfig({
     vue(),
     // vueDevTools(),
     AutoImport({
+      dts: 'types/auto-imports.d.ts',
       resolvers: [ElementPlusResolver()],
     }),
     Components({
+      dts: 'types/components.d.ts',
       resolvers: [ElementPlusResolver()],
     }),
     viteMockServe({

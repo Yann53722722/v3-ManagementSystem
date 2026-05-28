@@ -109,7 +109,4 @@ const resetForm = (formEl: FormInstance | undefined) => {
     }
   }
 }
-:deep(.el-loading-mask) {
-  position: absolute;
-}
 </style>
