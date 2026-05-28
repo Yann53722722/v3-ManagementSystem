@@ -1,4 +1,5 @@
 import { MockMethod } from 'vite-plugin-mock'
+import { decrypt } from '../src/utils/forgeEncrypt'
 
 export default [
   {
@@ -7,7 +8,8 @@ export default [
     timeout: 1000, // 模拟网络延迟
     response: ({ body }: { body: { userId: string; password: string } }) => {
       const { userId, password } = body
-      if (userId === 'admin' && password === '123456') {
+      const decryptedPassword = decrypt(password)
+      if (userId === 'admin' && decryptedPassword === '123456') {
         return {
           code: 200,
           data: {

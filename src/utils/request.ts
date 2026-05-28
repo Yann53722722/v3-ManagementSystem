@@ -93,7 +93,7 @@ instance.interceptors.request.use(
     // 是否需要token
     const isToken: boolean = config.headers?.isToken === false
     if (getToken() && !isToken) {
-      // 获取token
+      // 获取token并添加到请求头中
       config.headers.Authorization = `Bearer ${getToken()}`
     }
     return config
