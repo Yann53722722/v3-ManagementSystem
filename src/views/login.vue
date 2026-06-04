@@ -91,7 +91,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 .login {
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(45deg, skyblue, #1e90ff, skyblue);
+  background: linear-gradient(-45deg, #0369a1, #0ea5e9, #bae6fd);
   display: flex;
   justify-content: center;
   align-items: center;
