@@ -4,7 +4,7 @@
     <el-dropdown trigger="click" @command="handleCommand">
       <span @click="isCollapse = !isCollapse">
         <el-icon class="arrow-right-icon" :class="{ 'is-rotate': isCollapse }"
-          ><arrow-right
+          ><arrow-down
         /></el-icon>
       </span>
       <template #dropdown>
@@ -39,7 +39,7 @@ const handleCommand = (command: string) => {
       transition: transform 0.3s;
     }
     .is-rotate {
-      transform: rotate(90deg);
+      transform: rotate(180deg);
     }
   }
 }
