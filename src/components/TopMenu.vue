@@ -19,11 +19,26 @@
 </template>
 <script setup lang="ts">
 import { User, Setting, SwitchButton } from '@element-plus/icons-vue'
+import { removeToken } from '@/utils/auth'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 let isCollapse = ref(false)
 
 const handleCommand = (command: string) => {
   console.log('route to:' + command)
+  switch (command) {
+    case 'profile': // 路由到个人中心
+    case 'settings': // 路由到设置页面
+      router.replace('/' + command)
+      break
+    case 'logout':
+      // 执行退出登录逻辑
+      location.href = '/login'
+      removeToken()
+      break
+  }
 }
 </script>
 <style scoped lang="scss">

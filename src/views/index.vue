@@ -11,7 +11,9 @@
         <Breadcrumb />
         <TopMenu />
       </div>
-      <div class="content">content</div>
+      <div class="content">
+        <router-view :key="$route.path" />
+      </div>
     </div>
   </div>
 </template>
