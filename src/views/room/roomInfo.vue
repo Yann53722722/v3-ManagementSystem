@@ -1,3 +1,3 @@
-<template>room</template>
+<template>roomInfo</template>
 <script setup lang="ts"></script>
 <style scoped lang="scss"></style>

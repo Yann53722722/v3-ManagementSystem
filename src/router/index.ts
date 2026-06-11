@@ -1,6 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { getToken } from '@/utils/auth'
+import { getRouters, getInfo } from '@/api/menu'
+import { useRoleStore } from '@/stores/auth'
+import { storeToRefs } from 'pinia'
 import Layout from '@/views/index.vue'
+import { generateRoutes } from '@/utils/menu'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,26 +17,27 @@ const router = createRouter({
     {
       path: '/login',
       component: () => import('@/views/login.vue'),
+      meta: { title: '登录' },
     },
     {
       path: '/index',
       component: Layout,
+      redirect: '/index/home',
       children: [
         {
-          path: '/',
-          redirect: '/home',
-        },
-        {
-          path: '/home',
+          path: 'home',
           component: () => import('@/views/home.vue'),
+          meta: { title: '主页' },
         },
         {
-          path: '/profile',
+          path: 'profile',
           component: () => import('@/views/user/profile.vue'),
+          meta: { title: '个人资料' },
         },
         {
-          path: '/settings',
+          path: 'settings',
           component: () => import('@/views/user/settings.vue'),
+          meta: { title: '设置' },
         },
       ],
     },
@@ -47,10 +52,31 @@ router.beforeEach((to, from) => {
   console.log(token, '路由守卫：', to.path)
   if (token) {
     // 已登录
-    if (to.path === '/login') {
-      return '/index' // 如果已登录并准备进入登录页，则重定向到主页
+    const roleStore = useRoleStore()
+    const { role } = storeToRefs(roleStore)
+    const { setRole } = roleStore
+    if (!role.value.length) {
+      // 未拉取过用户信息，发请求获取登录用户信息
+      return getInfo()
+        .then((data) => {
+          // 存储登录用户信息
+          setRole(data.roles)
+          // 获取路由并动态添加
+          return getRouters().then((routes) => {
+            generateRoutes(routes, router)
+            // 动态路由已添加，重试导航到目标路由（解决刷新白屏）
+            return to.fullPath
+          })
+        })
+        .catch(() => {
+          return '/error'
+        })
     } else {
-      return // 否则正常导航
+      if (to.path === '/login') {
+        return '/index' // 如果已登录并准备进入登录页，则重定向到主页
+      } else {
+        return // 否则正常导航
+      }
     }
   } else {
     // 未登录
