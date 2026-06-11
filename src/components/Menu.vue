@@ -1,57 +1,56 @@
 <template>
-  <!-- 暂时写死，后续改为动态加载 -->
   <el-menu
     background-color="#0c4a6e"
     class="el-menu-vertical"
     text-color="#f0f0f0"
     active-text-color="#0ea5e9"
-    @open="handleOpen"
-    @close="handleClose"
+    :router="true"
+    :default-active="route.path"
   >
-    <el-sub-menu index="1">
-      <template #title>
-        <el-icon><Discount /></el-icon>
-        <span>账户管理</span>
-      </template>
-      <el-menu-item index="1-1" @click ="$router.push('/account/user')">用户管理</el-menu-item>
-      <el-menu-item index="1-2" @click="$router.push('/account/role')">角色管理</el-menu-item>
-    </el-sub-menu>
-    <el-sub-menu index="2">
-      <template #title>
-        <el-icon><House /></el-icon>
-        <span>客房管理</span>
-      </template>
-      <el-menu-item index="2-1" @click="$router.push('/room/roomStyle')">房型管理</el-menu-item>
-      <el-menu-item index="2-2" @click="$router.push('/room/roomInfo')">房间管理</el-menu-item>
-    </el-sub-menu>
-    <el-sub-menu index="3">
-      <template #title>
-        <el-icon><User /></el-icon>
-        <span>客户管理</span>
-      </template>
-      <el-menu-item index="3-1" @click="$router.push('/customer/checkIn')">入住管理</el-menu-item>
-      <el-menu-item index="3-2" @click="$router.push('/customer/order')">客户订单</el-menu-item>
-    </el-sub-menu>
-    <el-sub-menu index="4">
-      <template #title>
-        <el-icon><Setting /></el-icon>
-        <span>系统管理</span>
-      </template>
-      <el-menu-item index="4-1" @click="$router.push('/system/menu')">菜单管理</el-menu-item>
-      <el-menu-item index="4-2" @click="$router.push('/system/dictionary')">字典管理</el-menu-item>
-    </el-sub-menu>
+    <template v-for="item in menus" :key="item.routeKey">
+      <!-- 有子菜单（父级分组） -->
+      <el-sub-menu v-if="item.children?.length" :index="item.routeKey">
+        <template #title>
+          <el-icon><component :is="getIcon(item.routeKey)" /></el-icon>
+          <span>{{ item.title }}</span>
+        </template>
+        <el-menu-item
+          v-for="child in item.children"
+          :key="child.routeKey"
+          :index="child.path!"
+        >
+          <template #title>{{ child.title }}</template>
+        </el-menu-item>
+      </el-sub-menu>
+    </template>
   </el-menu>
 </template>
-<script setup lang="ts">
-import { Discount } from '@element-plus/icons-vue'
 
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
+import { Discount, House, User, Setting } from '@element-plus/icons-vue'
+import { useRoleStore } from '@/stores/auth'
+import { storeToRefs } from 'pinia'
+import type { Component } from 'vue'
+
+const route = useRoute()
+const roleStore = useRoleStore()
+const { menus } = storeToRefs(roleStore)
+
+/** 菜单 routeKey → Element Plus 图标映射 */
+const iconMap: Record<string, Component> = {
+  account: Discount,
+  room: House,
+  customer: User,
+  system: Setting,
 }
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
+
+function getIcon(routeKey: string): Component {
+  return iconMap[routeKey] || Discount
 }
+
 </script>
+
 <style scoped lang="scss">
 .el-menu {
   border: none;

@@ -4,7 +4,7 @@ import { getRouters, getInfo } from '@/api/menu'
 import { useRoleStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
 import Layout from '@/views/index.vue'
-import { generateRoutes } from '@/utils/menu'
+import { generateRoutes, buildMenuTree } from '@/utils/menu'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -64,6 +64,9 @@ router.beforeEach((to, from) => {
           // 获取路由并动态添加
           return getRouters().then((routes) => {
             generateRoutes(routes, router)
+            // 构建菜单树并存储，供侧边栏动态渲染
+            const menuTree = buildMenuTree(routes)
+            roleStore.setMenus(menuTree)
             // 动态路由已添加，重试导航到目标路由（解决刷新白屏）
             return to.fullPath
           })
