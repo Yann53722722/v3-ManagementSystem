@@ -12,7 +12,7 @@ export default [
         data: {
           userInfo: {},
           roles: ['admin'],
-          permission: ['*:*:*']
+          permission: ['*:*:*'],
         },
       }
     },
@@ -73,10 +73,10 @@ export default [
             component: 'ParentView',
             title: '系统管理',
             children: {
-              dictionary: {
-                component: 'system/dictionary',
-                title: '字典管理',
-              },
+              // dictionary: {
+              //   component: 'system/dictionary',
+              //   title: '字典管理',
+              // },
               menu: {
                 component: 'system/menu',
                 title: '菜单管理',
