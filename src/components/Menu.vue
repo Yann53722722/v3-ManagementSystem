@@ -6,6 +6,7 @@
     active-text-color="#0ea5e9"
     :router="true"
     :default-active="route.path"
+    unique-opened
   >
     <template v-for="item in menus" :key="item.routeKey">
       <!-- 有子菜单（父级分组） -->
